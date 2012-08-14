@@ -13,7 +13,7 @@ def get_links(page_url)
       # puts ln.text
       #     puts ln["href"]
       tmp = get_links("http://en.wikipedia.org" + ln["href"])
-      tmp << ln["href"]
+      tmp << "http://en.wikipedia.org" + ln["href"]
       break
     end
   end
@@ -94,31 +94,40 @@ wiki_arr << WikiNode.new("2007", -1)
 
 #p text(wikidoc.xpath(".//ul[@id='mw-whatlinkshere-list']/li[1]/a"))
 
-curr_url = baselinks_url + wiki_arr[0].link + "\&limit=5000"
-# pg = new_agent.get(curr_url)
 
+# full url to start with
+curr_url = baselinks_url + wiki_arr[0].link + "\&limit=5000"
+
+
+# actual array of links
 arr = get_links(curr_url)
 
+
+#xpathstr = ".//ul[@id='mw-whatlinkshere-list']/li[#{num}]/a" ## xpath str example
+
 parent = 0
-#xpathstr = ".//ul[@id='mw-whatlinkshere-list']/li[#{num}]/a"
-pg = new_agent.get(arr[0])
-(1..5000).each do |ck|
+pg = new_agent.get(arr[0]) # error: arr[0] seems to begin /w/ ... missing the full url getting: where?
+(1..10).each do |ck|
   t = Nokogiri::HTML(pg.body).xpath(".//ul[@id='mw-whatlinkshere-list']/li[#{ck}]/a/text()").to_s.gsub(' ', '%20')
   if t == ""
     break
   else
     wiki_arr << WikiNode.new(t,parent)
+    p t
+    end
   end
 end
 
-arr.shift
+arr.shift # pops first element off
 
 arr.each do |elem|
  # wikidoc = Nokogiri::HTML(open(elem))
   pg = new_agent.get(elem)
-  (1..5000).each do |num|
+  (1..10).each do |num|
     t = Nokogiri::HTML(pg.body).xpath(".//ul[@id='mw-whatlinkshere-list']/li[#{num}]/a/text()").to_s.gsub(' ', '%20')
     wiki_arr << WikiNode.new(t,parent)
+    p t
+    end
   end
 end
 
