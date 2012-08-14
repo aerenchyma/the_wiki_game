@@ -8,11 +8,8 @@ def get_links(page_url)
   links = ndoc.css('a')
   tmp = []
   found = nil
-  # hrefs = links.map {|ln| ln.attribute('href').to_s}
   links.each do |ln|
     if ln.text == "next 5,000"
-      # puts ln.text
-      #     puts ln["href"]
       tmp = get_links("http://en.wikipedia.org" + ln["href"])
       tmp << "http://en.wikipedia.org" + ln["href"]
       found = true
@@ -82,10 +79,10 @@ if finstr =~ /[Hh]elp/ || finstr =~ /[Ff]ile/ || finstr =~ /Meta/
 end
 url = "https://en.wikipedia.org/#{finstr}"
 
-#start_name = f.to_s.gsub(' ', '%20')
-start_name = "1792"
-#goal_name = tl.to_s.gsub(' ', '%20')
-goal_name = "Jane%20Austen"
+start_name = f.to_s.gsub(' ', '%20') 
+#start_name = "1792" # engineered win
+goal_name = tl.to_s.gsub(' ', '%20') 
+#goal_name = "Jane%20Austen" # engineered win
 
 #puts start_name
 
@@ -109,21 +106,6 @@ $wiki_arr = []
 puts  " link: #{baselinks_url+goal_name}, text: #{goal_name}"
 $wiki_arr << WikiNode.new(baselinks_url + goal_name,-1, goal_name)
 #$wiki_arr << WikiNode.new("2007", -1)
-
-#wikidoc = Nokogiri::HTML(open(baselinks_url + $wiki_arr[0].link))
-
-#p text(wikidoc.xpath(".//ul[@id='mw-whatlinkshere-list']/li[1]/a"))
-
-
-# full url to start with
-# curr_url = baselinks_url + $wiki_arr[parent].link + "\&limit=5000"
-# 
-# 
-# # actual array of links
-# arr = get_links(curr_url)
-
-
-#xpathstr = ".//ul[@id='mw-whatlinkshere-list']/li[#{num}]/a" ## xpath str example
 
 parent = 0
 win = nil
