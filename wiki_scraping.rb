@@ -69,6 +69,8 @@ url = "https://en.wikipedia.org/#{finstr}"
 start_name = f.to_s.gsub(' ', '%20')
 goal_name = tl.to_s.gsub(' ', '%20')
 
+#puts start_name
+
 ###### END CODE to get start and goal links
 
 #baselinks_url = "http://en.wikipedia.org/wiki/Special:WhatLinksHere/"
@@ -80,7 +82,7 @@ new_agent = Mechanize.new { |ag|
 }
 
 # defining struct for nodes -- string, integer (array index)
-WikiNode = Struct.new(:link, :parent)
+WikiNode = Struct.new(:link, :parent, :text)
 
 # array of Nodes
 wiki_arr = []
@@ -108,13 +110,14 @@ arr = get_links(curr_url)
 parent = 0
 pg = new_agent.get(arr[0]) # error: arr[0] seems to begin /w/ ... missing the full url getting: where?
 (1..10).each do |ck|
-  t = Nokogiri::HTML(pg.body).xpath(".//ul[@id='mw-whatlinkshere-list']/li[#{ck}]/a/text()").to_s.gsub(' ', '%20')
+  txt = Nokogiri::HTML(pg.body).xpath(".//ul[@id='mw-whatlinkshere-list']/li[#{ck}]/a/text()").to_s.gsub(' ','%20')
+  t = Nokogiri::HTML(pg.body).xpath(".//ul[@id='mw-whatlinkshere-list']/li[#{ck}]/span[@class='mw-whatlinkshere-tools']/a/@href").to_s.gsub(' ', '%20')
   if t == ""
     break
   else
-    wiki_arr << WikiNode.new(t,parent)
-    p t
-    end
+    wiki_arr << WikiNode.new("en.wikipedia.org" + t, parent, txt)
+    # p t
+    # p txt
   end
 end
 
@@ -124,25 +127,33 @@ arr.each do |elem|
  # wikidoc = Nokogiri::HTML(open(elem))
   pg = new_agent.get(elem)
   (1..10).each do |num|
-    t = Nokogiri::HTML(pg.body).xpath(".//ul[@id='mw-whatlinkshere-list']/li[#{num}]/a/text()").to_s.gsub(' ', '%20')
-    wiki_arr << WikiNode.new(t,parent)
-    p t
-    end
+    txt = Nokogiri::HTML(pg.body).xpath(".//ul[@id='mw-whatlinkshere-list']/li[#{num}]/a/text()").to_s.gsub(' ', '%20')
+    t = Nokogiri::HTML(pg.body).xpath(".//ul[@id='mw-whatlinkshere-list']/li[#{num}]/span[@class='mw-whatlinkshere-tools']/a/@href").to_s.gsub(' ', '%20')
+    wiki_arr << WikiNode.new("en.wikipedia.org" + t, parent, txt)
+    # p t
+    # p txt
   end
 end
 
-wiki_arr.each do |l|
-  puts l.link
+
+
+while wiki_arr.length > parent
+  if wiki_arr[parent].text == start_name
+    puts "Win"
+  end
+  
+  
+  parent += 1
 end
 
 
 # check for next 5000 link
 
 #puts baselinks_url + wiki_arr[0].link + 
-puts curr_url
-doc = Nokogiri::HTML(pg.body).xpath(".//ul[@id='mw-whatlinkshere-list']/li[5001]/a/text()").to_s.gsub(' ', '%20')
-doc2 = Nokogiri::HTML(pg.body).xpath(".//ul[@id='mw-whatlinkshere-list']/li[4999]/a/text()").to_s.gsub(' ', '%20')
-doc3 = Nokogiri::HTML(pg.body).xpath(".//ul[@id='mw-whatlinkshere-list']/li[5000]/a/text()").to_s.gsub(' ', '%20')
+#puts curr_url
+# doc = Nokogiri::HTML(pg.body).xpath(".//ul[@id='mw-whatlinkshere-list']/li[5001]/a/text()").to_s.gsub(' ', '%20')
+# doc2 = Nokogiri::HTML(pg.body).xpath(".//ul[@id='mw-whatlinkshere-list']/li[4999]/a/text()").to_s.gsub(' ', '%20')
+# doc3 = Nokogiri::HTML(pg.body).xpath(".//ul[@id='mw-whatlinkshere-list']/li[5000]/a/text()").to_s.gsub(' ', '%20')
 # fulldoc = Nokogiri::HTML(open(curr_url))
 #p doc
 # p doc
