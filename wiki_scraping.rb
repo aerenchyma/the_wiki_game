@@ -84,7 +84,6 @@ start_name = f.to_s.gsub(' ', '%20')
 goal_name = tl.to_s.gsub(' ', '%20') 
 #goal_name = "Jane%20Austen" # engineered win
 
-#puts start_name
 
 ###### END CODE to get start and goal links
 
