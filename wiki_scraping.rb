@@ -25,13 +25,14 @@ def get_links(page_url)
   tmp
 end
 
-# def print_path(win_node)
-#   print win_node.text
-#   count = 0
-#   while count < win_node.parent
-#     
-#   end
-# end
+def print_path(win_node)
+    curr_node = win_node
+    while curr_node.parent >= 0
+      puts curr_node.text
+      curr_node = $wiki_arr[curr_node.parent]
+    end
+    puts curr_node.text
+end
 
 
 
@@ -82,7 +83,7 @@ end
 url = "https://en.wikipedia.org/#{finstr}"
 
 #start_name = f.to_s.gsub(' ', '%20')
-start_name = "England"
+start_name = "1792"
 #goal_name = tl.to_s.gsub(' ', '%20')
 goal_name = "Jane%20Austen"
 
@@ -148,7 +149,8 @@ while $wiki_arr.length > parent && parent < 5
         t = Nokogiri::HTML(pg.body).xpath(".//ul[@id='mw-whatlinkshere-list']/li[#{num}]/span[@class='mw-whatlinkshere-tools']/a/@href").to_s.gsub(' ', '%20')
         $wiki_arr << WikiNode.new("http://en.wikipedia.org" + t, parent, txt)
         if txt == start_name
-          puts "Win"
+          puts "Win\n"
+          print_path($wiki_arr.last)
           win = true
           break
         end
@@ -162,6 +164,7 @@ while $wiki_arr.length > parent && parent < 5
   end
   parent += 1
 end
+
 
 
 # check for next 5000 link
