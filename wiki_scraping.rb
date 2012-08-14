@@ -116,7 +116,7 @@ while $wiki_arr.length > parent && parent < 5
   puts curr_url
   arr = get_links(curr_url)
   p arr
-  pg = new_agent.get(arr[0]) # error: arr[0] seems to begin /w/ ... missing the full url getting: where?
+  pg = new_agent.get(arr[0]) 
 
 
   if not arr.empty?
@@ -146,25 +146,4 @@ while $wiki_arr.length > parent && parent < 5
   end
   parent += 1
 end
-
-
-
-# check for next 5000 link
-
-#puts baselinks_url + $wiki_arr[0].link + 
-#puts curr_url
-# doc = Nokogiri::HTML(pg.body).xpath(".//ul[@id='mw-whatlinkshere-list']/li[5001]/a/text()").to_s.gsub(' ', '%20')
-# doc2 = Nokogiri::HTML(pg.body).xpath(".//ul[@id='mw-whatlinkshere-list']/li[4999]/a/text()").to_s.gsub(' ', '%20')
-# doc3 = Nokogiri::HTML(pg.body).xpath(".//ul[@id='mw-whatlinkshere-list']/li[5000]/a/text()").to_s.gsub(' ', '%20')
-# fulldoc = Nokogiri::HTML(open(curr_url))
-#p doc
-# p doc
-# p doc2
-# p doc3
-
-
-
-# arr = get_links(curr_url)
-# p arr
-
 
