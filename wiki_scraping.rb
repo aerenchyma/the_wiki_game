@@ -10,7 +10,6 @@ def get_links(page_url)
   found = nil
   # hrefs = links.map {|ln| ln.attribute('href').to_s}
   links.each do |ln|
-    #found = nil
     if ln.text == "next 5,000"
       # puts ln.text
       #     puts ln["href"]
@@ -25,6 +24,16 @@ def get_links(page_url)
   end
   tmp
 end
+
+# def print_path(win_node)
+#   print win_node.text
+#   count = 0
+#   while count < win_node.parent
+#     
+#   end
+# end
+
+
 
 # CODE to get start and goal links
 
@@ -93,20 +102,20 @@ new_agent = Mechanize.new { |ag|
 WikiNode = Struct.new(:link, :parent, :text)
 
 # array of Nodes
-wiki_arr = []
+$wiki_arr = []
 
 # initializing array (real or testing):
 puts  " link: #{baselinks_url+goal_name}, text: #{goal_name}"
-wiki_arr << WikiNode.new(baselinks_url + goal_name,-1, goal_name)
-#wiki_arr << WikiNode.new("2007", -1)
+$wiki_arr << WikiNode.new(baselinks_url + goal_name,-1, goal_name)
+#$wiki_arr << WikiNode.new("2007", -1)
 
-#wikidoc = Nokogiri::HTML(open(baselinks_url + wiki_arr[0].link))
+#wikidoc = Nokogiri::HTML(open(baselinks_url + $wiki_arr[0].link))
 
 #p text(wikidoc.xpath(".//ul[@id='mw-whatlinkshere-list']/li[1]/a"))
 
 
 # full url to start with
-# curr_url = baselinks_url + wiki_arr[parent].link + "\&limit=5000"
+# curr_url = baselinks_url + $wiki_arr[parent].link + "\&limit=5000"
 # 
 # 
 # # actual array of links
@@ -117,10 +126,10 @@ wiki_arr << WikiNode.new(baselinks_url + goal_name,-1, goal_name)
 
 parent = 0
 win = nil
-while wiki_arr.length > parent && parent < 5
+while $wiki_arr.length > parent && parent < 5
   puts "parent is now: #{parent}"
 
-  curr_url = wiki_arr[parent].link + "\&limit=5000"
+  curr_url = $wiki_arr[parent].link + "\&limit=5000"
   puts curr_url
   arr = get_links(curr_url)
   p arr
@@ -137,7 +146,7 @@ while wiki_arr.length > parent && parent < 5
       (1..10).each do |num|
         txt = Nokogiri::HTML(pg.body).xpath(".//ul[@id='mw-whatlinkshere-list']/li[#{num}]/a/text()").to_s.gsub(' ', '%20')
         t = Nokogiri::HTML(pg.body).xpath(".//ul[@id='mw-whatlinkshere-list']/li[#{num}]/span[@class='mw-whatlinkshere-tools']/a/@href").to_s.gsub(' ', '%20')
-        wiki_arr << WikiNode.new("http://en.wikipedia.org" + t, parent, txt)
+        $wiki_arr << WikiNode.new("http://en.wikipedia.org" + t, parent, txt)
         if txt == start_name
           puts "Win"
           win = true
@@ -157,7 +166,7 @@ end
 
 # check for next 5000 link
 
-#puts baselinks_url + wiki_arr[0].link + 
+#puts baselinks_url + $wiki_arr[0].link + 
 #puts curr_url
 # doc = Nokogiri::HTML(pg.body).xpath(".//ul[@id='mw-whatlinkshere-list']/li[5001]/a/text()").to_s.gsub(' ', '%20')
 # doc2 = Nokogiri::HTML(pg.body).xpath(".//ul[@id='mw-whatlinkshere-list']/li[4999]/a/text()").to_s.gsub(' ', '%20')
