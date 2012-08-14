@@ -125,25 +125,7 @@ while wiki_arr.length > parent && parent < 5
   arr = get_links(curr_url)
   p arr
   pg = new_agent.get(arr[0]) # error: arr[0] seems to begin /w/ ... missing the full url getting: where?
-  # (1..10).each do |ck|
-  #   txt = Nokogiri::HTML(pg.body).xpath(".//ul[@id='mw-whatlinkshere-list']/li[#{ck}]/a/text()").to_s.gsub(' ','%20')
-  #   t = Nokogiri::HTML(pg.body).xpath(".//ul[@id='mw-whatlinkshere-list']/li[#{ck}]/span[@class='mw-whatlinkshere-tools']/a/@href").to_s.gsub(' ', '%20')
-  #   if t == ""
-  #     break
-  #   else
-  #     wiki_arr << WikiNode.new("http://en.wikipedia.org" + t, parent, txt)
-  #     if txt == start_name
-  #       puts "Win"
-  #       win = true
-  #       break
-  #     end
-  #     p t
-  #     p txt
-  #   end
-  # end
-  # 
-  # 
-  # arr.shift # pops first element off
+
 
   if not arr.empty?
     if win 
