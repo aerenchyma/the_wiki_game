@@ -3,6 +3,9 @@ require 'open-uri'
 require 'nokogiri'
 require 'mechanize'
 
+## code used in wiki_scrape.rb to gather random start and goal wiki links
+## yes, there is a much easier way to do this: TODO
+
 agent = Mechanize.new { |ag|
   ag.user_agent_alias = 'Mac Safari'
 }
@@ -47,45 +50,7 @@ if finstr =~ /[Hh]elp/ || finstr =~ /[Ff]ile/ || finstr =~ /Meta/
 end
 url = "https://en.wikipedia.org/#{finstr}"
 
-# check nokogiri object of url to see if "Wikipedia does not have an article with this exact name" is anywhere on the page, if so, get another, if not, OK cool
+# check nokogiri object of url to see if "Wikipedia does not have an article with this exact name" is anywhere on the page, if so, get another, or deal w/ redirects
 
 puts "Your goal page is #{tl}. \n URL: #{url}"
-#puts "Wait a moment at the page for redirection if it seems odd. <msg about contacting re: errors>"
 
-
-
-# occasional problems remain, e.g. https://en.wikipedia.org/wiki/%D0%A1%D1%80%D0%BF%D1%81%D0%BA%D0%B8_/_srpski
-# (it's not an english page so there is nothing to show, no reasonable redirection)
-# check text on page?
-
- #####
-
-# quit crawling/searching if the time diff is greater than 120, 'cos it measures in seconds (POSIX?)
-# see if that's reasonable time for Ruby
-
-# 3: crawl until successful FTW
-start_url = st_url
-goal_url =  url
-goal_title = tl.to_s
-
-
-
-
-
-
-# nag = Mechanize.new { |ag|
-#   ag.user_agent_alias = 'Mac Safari'
-# }
-
-#nxt_pg = ''
-# bgn_pg = nag.get(start_url)
-
-# want all that have 
-## ___<a href="/wiki/___ + \w*
-# poss_links = bgn_pg.links.find_all { |ls| ls.attributes.parent.name == 'a href'  }
-# puts "here are poss links, #{poss_links}"
-
-
-# until nxt_pg == goal_title do
-#   
-# end
