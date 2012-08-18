@@ -24,9 +24,10 @@ end
 
 def print_path(win_node)
     curr_node = win_node
-    while curr_node.parent >= 0
+    while curr_node.parent != nil
       puts curr_node.text
-      curr_node = $wiki_arr[curr_node.parent]
+      #curr_node = $wiki_arr[curr_node.parent]
+      curr_node = $wiki_hash[curr_node.parent]
     end
     puts curr_node.text
 end
@@ -109,20 +110,26 @@ WikiNode = Struct.new(:link, :parent, :text)
 # array of Nodes
 $wiki_arr = []
 
+# initializing hashes
+$wiki_hash = {}
+
 # initializing array (real or testing):
 puts  " link: #{baselinks_url+goal_name}, text: #{goal_name}"
-$wiki_arr << WikiNode.new(baselinks_url + goal_name,-1, goal_name)
+#$wiki_arr << WikiNode.new(baselinks_url + goal_name,-1, goal_name)
+$wiki_hash[goal_name] = WikiNode.new(baselinks_url + goal_name, nil, goal_name)
+
 #$wiki_arr << WikiNode.new("2007", -1)
 
 parent = 0
 win = nil
-while $wiki_arr.length > parent #&& parent < 5
+while $wiki_hash.keys.length > parent #&& parent < 5
   puts "parent is now: #{parent}"
   sleep 0.1 # delay .1 secs
-  curr_url = $wiki_arr[parent].link + "\&limit=5000"
-  puts curr_url
+  curr_url = $wiki_hash[$wiki_hash.keys[parent]].link + "\&limit=5000"
+  #puts curr_url
+  parent_text = $wiki_hash[$wiki_hash.keys[parent]].text
   arr = get_links(curr_url)
-  p arr
+  #p arr
   pg = new_agent.get(arr[0]) 
 
 
@@ -144,13 +151,15 @@ while $wiki_arr.length > parent #&& parent < 5
         else
           p t
           p txt
-          if !in_previous(txt)
-            $wiki_arr << WikiNode.new("http://en.wikipedia.org" + t, parent, txt)
+          
+          if !$wiki_hash.has_key?(txt)
+            #$wiki_arr << WikiNode.new("http://en.wikipedia.org" + t, parent, txt)
+            $wiki_hash[txt] = WikiNode.new("http://en.wikipedia.org" + t, parent_text, txt)
           end
         end
         if txt == start_name
           puts "Win\n"
-          print_path($wiki_arr.last)
+          print_path($wiki_hash.keys.last)
           win = true
           break
         end
