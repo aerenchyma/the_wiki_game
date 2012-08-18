@@ -91,8 +91,8 @@ url = "https://en.wikipedia.org/#{finstr}"
 #start_name = "1792" # engineered win
 #goal_name = tl.to_s.gsub(' ', '%20') 
 #goal_name = "Jane%20Austen" # engineered win
-start_name = "Ayn%20Rand"
-goal_name = "Youngsville,%20Pennsylvania"
+start_name = "Hacker%20(term)"
+goal_name = "Ruby%20on%20Rails"
 
 ###### END CODE to get start and goal links
 
@@ -149,7 +149,7 @@ while $wiki_hash.keys.length > parent #&& parent < 5
           #puts "Bad text, #{txt}"
           
         else
-          p t
+          #p t
           p txt
           
           if !$wiki_hash.has_key?(txt)
@@ -159,7 +159,7 @@ while $wiki_hash.keys.length > parent #&& parent < 5
         end
         if txt == start_name
           puts "Win\n"
-          print_path($wiki_hash.keys.last)
+          print_path($wiki_hash[$wiki_hash.keys.last])
           win = true
           break
         end
