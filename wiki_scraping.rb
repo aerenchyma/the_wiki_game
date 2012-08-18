@@ -91,8 +91,8 @@ url = "https://en.wikipedia.org/#{finstr}"
 #start_name = "1792" # engineered win
 #goal_name = tl.to_s.gsub(' ', '%20') 
 #goal_name = "Jane%20Austen" # engineered win
-start_name = "Hacker%20(term)"
-goal_name = "Ruby%20on%20Rails"
+start_name = "Hacker%20(term)" # engineering again
+goal_name = "Ruby%20on%20Rails" # engineering again
 
 ###### END CODE to get start and goal links
 
@@ -146,12 +146,9 @@ while $wiki_hash.keys.length > parent #&& parent < 5
       t = Nokogiri::HTML(pg.body).xpath(".//ul[@id='mw-whatlinkshere-list']/li[#{num}]/span[@class='mw-whatlinkshere-tools']/a/@href").to_s.gsub(' ', '%20')
       while txt != ""
         if t =~ /target=User/ || t =~ /target=Talk/ || t =~ /target=Template/
-          #puts "Bad text, #{txt}"
-          
+          # do nothing
         else
-          #p t
-          p txt
-          
+          p txt # so you can see where it's going
           if !$wiki_hash.has_key?(txt)
             #$wiki_arr << WikiNode.new("http://en.wikipedia.org" + t, parent, txt)
             $wiki_hash[txt] = WikiNode.new("http://en.wikipedia.org" + t, parent_text, txt)
@@ -163,8 +160,7 @@ while $wiki_hash.keys.length > parent #&& parent < 5
           win = true
           break
         end
-        # p t
-        #        p txt
+
         num += 1
         txt = Nokogiri::HTML(pg.body).xpath(".//ul[@id='mw-whatlinkshere-list']/li[#{num}]/a/text()").to_s.gsub(' ', '%20')
         t = Nokogiri::HTML(pg.body).xpath(".//ul[@id='mw-whatlinkshere-list']/li[#{num}]/span[@class='mw-whatlinkshere-tools']/a/@href").to_s.gsub(' ', '%20')
