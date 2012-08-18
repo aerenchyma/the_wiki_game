@@ -31,7 +31,14 @@ def print_path(win_node)
     puts curr_node.text
 end
 
-
+def in_previous(text)
+  $wiki_arr.each do |c|
+    if c.text == text
+      return true
+    end
+  end
+  return false
+end
 
 # CODE to get start and goal links
 
@@ -83,8 +90,8 @@ url = "https://en.wikipedia.org/#{finstr}"
 #start_name = "1792" # engineered win
 #goal_name = tl.to_s.gsub(' ', '%20') 
 #goal_name = "Jane%20Austen" # engineered win
-start_name = "French%20Revolution"
-goal_name = "Voltaire"
+start_name = "Ayn%20Rand"
+goal_name = "Youngsville,%20Pennsylvania"
 
 ###### END CODE to get start and goal links
 
@@ -126,16 +133,20 @@ while $wiki_arr.length > parent #&& parent < 5
     arr.each do |elem|
      # wikidoc = Nokogiri::HTML(open(elem))
       pg = new_agent.get(elem)
-      (1..5000).each do |num|
-        txt = Nokogiri::HTML(pg.body).xpath(".//ul[@id='mw-whatlinkshere-list']/li[#{num}]/a/text()").to_s.gsub(' ', '%20')
-        t = Nokogiri::HTML(pg.body).xpath(".//ul[@id='mw-whatlinkshere-list']/li[#{num}]/span[@class='mw-whatlinkshere-tools']/a/@href").to_s.gsub(' ', '%20')
-        if t =~ /target=User/ || t =~ /target=Talk/
+      #(1..5000).each do |num|
+      num = 1
+      txt = Nokogiri::HTML(pg.body).xpath(".//ul[@id='mw-whatlinkshere-list']/li[#{num}]/a/text()").to_s.gsub(' ', '%20')
+      t = Nokogiri::HTML(pg.body).xpath(".//ul[@id='mw-whatlinkshere-list']/li[#{num}]/span[@class='mw-whatlinkshere-tools']/a/@href").to_s.gsub(' ', '%20')
+      while txt != ""
+        if t =~ /target=User/ || t =~ /target=Talk/ || t =~ /target=Template/
           #puts "Bad text, #{txt}"
           
         else
           p t
           p txt
-          $wiki_arr << WikiNode.new("http://en.wikipedia.org" + t, parent, txt)
+          if !in_previous(txt)
+            $wiki_arr << WikiNode.new("http://en.wikipedia.org" + t, parent, txt)
+          end
         end
         if txt == start_name
           puts "Win\n"
@@ -145,6 +156,9 @@ while $wiki_arr.length > parent #&& parent < 5
         end
         # p t
         #        p txt
+        num += 1
+        txt = Nokogiri::HTML(pg.body).xpath(".//ul[@id='mw-whatlinkshere-list']/li[#{num}]/a/text()").to_s.gsub(' ', '%20')
+        t = Nokogiri::HTML(pg.body).xpath(".//ul[@id='mw-whatlinkshere-list']/li[#{num}]/span[@class='mw-whatlinkshere-tools']/a/@href").to_s.gsub(' ', '%20')
       end
     end
   end
