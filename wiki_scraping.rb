@@ -79,11 +79,12 @@ if finstr =~ /[Hh]elp/ || finstr =~ /[Ff]ile/ || finstr =~ /Meta/
 end
 url = "https://en.wikipedia.org/#{finstr}"
 
-start_name = f.to_s.gsub(' ', '%20') 
+#start_name = f.to_s.gsub(' ', '%20') 
 #start_name = "1792" # engineered win
-goal_name = tl.to_s.gsub(' ', '%20') 
+#goal_name = tl.to_s.gsub(' ', '%20') 
 #goal_name = "Jane%20Austen" # engineered win
-
+start_name = "French%20Revolution"
+goal_name = "Voltaire"
 
 ###### END CODE to get start and goal links
 
@@ -108,9 +109,9 @@ $wiki_arr << WikiNode.new(baselinks_url + goal_name,-1, goal_name)
 
 parent = 0
 win = nil
-while $wiki_arr.length > parent && parent < 5
+while $wiki_arr.length > parent #&& parent < 5
   puts "parent is now: #{parent}"
-
+  sleep 0.1 # delay .1 secs
   curr_url = $wiki_arr[parent].link + "\&limit=5000"
   puts curr_url
   arr = get_links(curr_url)
@@ -125,18 +126,25 @@ while $wiki_arr.length > parent && parent < 5
     arr.each do |elem|
      # wikidoc = Nokogiri::HTML(open(elem))
       pg = new_agent.get(elem)
-      (1..10).each do |num|
+      (1..5000).each do |num|
         txt = Nokogiri::HTML(pg.body).xpath(".//ul[@id='mw-whatlinkshere-list']/li[#{num}]/a/text()").to_s.gsub(' ', '%20')
         t = Nokogiri::HTML(pg.body).xpath(".//ul[@id='mw-whatlinkshere-list']/li[#{num}]/span[@class='mw-whatlinkshere-tools']/a/@href").to_s.gsub(' ', '%20')
-        $wiki_arr << WikiNode.new("http://en.wikipedia.org" + t, parent, txt)
+        if t =~ /target=User/ || t =~ /target=Talk/
+          #puts "Bad text, #{txt}"
+          
+        else
+          p t
+          p txt
+          $wiki_arr << WikiNode.new("http://en.wikipedia.org" + t, parent, txt)
+        end
         if txt == start_name
           puts "Win\n"
           print_path($wiki_arr.last)
           win = true
           break
         end
-       p t
-       p txt
+        # p t
+        #        p txt
       end
     end
   end
