@@ -32,14 +32,14 @@ def print_path(win_node)
     puts curr_node.text
 end
 
-def in_previous(text)
-  $wiki_arr.each do |c|
-    if c.text == text
-      return true
-    end
-  end
-  return false
-end
+# def in_previous(text)
+#   $wiki_arr.each do |c|
+#     if c.text == text
+#       return true
+#     end
+#   end
+#   return false
+# end
 
 # CODE to get start and goal links
 
